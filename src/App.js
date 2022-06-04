@@ -1,13 +1,15 @@
 import './App.css';
 import React, { Component } from 'react';
 import axios from 'axios';
+
+import CardList from './components/CardList/CardList.jsx';
+import SearchBox from './components/SearchBox/SearchBox.jsx';
 class App extends Component {
 	//constructor runs first at any classes
 	//render runs second
 	//then componentDidMount
 
 	constructor(props) {
-		console.log('constructor');
 		super();
 		this.state = {
 			monsters: [],
@@ -28,7 +30,6 @@ class App extends Component {
 		);
 	}
 	componentDidMount() {
-		console.log('componentDidMount');
 		this.getMonsterData();
 	}
 
@@ -43,7 +44,7 @@ class App extends Component {
 		);
 	};
 	render() {
-		console.log('render');
+		console.log('render from APP');
 		const { monsters, searchField } = this.state;
 		const { monsterValue } = this;
 
@@ -53,14 +54,8 @@ class App extends Component {
 
 		return (
 			<div className='App'>
-				<input className='search-box' type='search' placeholder='search monsters' onChange={monsterValue} />
-				{filteredMonsters.map((monster) => {
-					return (
-						<div key={monster.id}>
-							<h1>{monster.name}</h1>
-						</div>
-					);
-				})}
+				<SearchBox onChangeHandler={monsterValue} placeHolder='Search Monster' className='monsters-search-box' />
+				<CardList monsters={filteredMonsters} />
 			</div>
 		);
 	}
