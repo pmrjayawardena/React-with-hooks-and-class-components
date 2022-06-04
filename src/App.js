@@ -1,52 +1,66 @@
-import logo from './logo.svg';
 import './App.css';
 import React, { Component } from 'react';
-
+import axios from 'axios';
 class App extends Component {
+	//constructor runs first at any classes
+	//render runs second
+	//then componentDidMount
+
 	constructor(props) {
+		console.log('constructor');
 		super();
 		this.state = {
-			name: {
-				firstName: 'Prabodha',
-				lastName: 'Jaye',
-			},
-
-			company: 'eyepax',
+			monsters: [],
+			searchField: '',
 		};
 	}
 
-	changeName() {
-		// {
-		// 	name: {
-		//     firstName:'Prabodha',
-		//     lastName:'Jaye',
-		//   },
-		// 	company: 'eyepax',
-		// }
-		//this is shallow merger that means react doesnt care about what the value was before and how complex that is
-
-		//if we change the name like below we no longer has access to firstName and lastName becase it doesnt care about the previus value
-		// this.setState({ name: 'Changed name' });
+	async getMonsterData() {
+		const monsterData = await axios.get('https://jsonplaceholder.typicode.com/users');
 
 		this.setState(
 			(state, props) => {
-				return { name: { firstName: 'Changed', lastName: 'Name' }, company: 'eyepax' };
+				return { monsters: monsterData.data };
 			},
 			() => {
-				console.log(this.state);
+				// console.log('hi', this.state);
 			}
 		);
 	}
+	componentDidMount() {
+		console.log('componentDidMount');
+		this.getMonsterData();
+	}
+
+	monsterValue = (event) => {
+		this.setState(
+			(state, props) => {
+				return {
+					searchField: event.target.value,
+				};
+			},
+			() => {}
+		);
+	};
 	render() {
+		console.log('render');
+		const { monsters, searchField } = this.state;
+		const { monsterValue } = this;
+
+		const filteredMonsters = monsters.filter((monster) => {
+			return monster.name.toLowerCase().includes(searchField.toLowerCase());
+		});
+
 		return (
 			<div className='App'>
-				<header className='App-header'>
-					<img src={logo} className='App-logo' alt='logo' />
-					<p>
-						Hello {this.state.name.firstName}, hi i work at {this.state.company}
-					</p>
-					<button onClick={this.changeName.bind(this)}>Change Name</button>
-				</header>
+				<input className='search-box' type='search' placeholder='search monsters' onChange={monsterValue} />
+				{filteredMonsters.map((monster) => {
+					return (
+						<div key={monster.id}>
+							<h1>{monster.name}</h1>
+						</div>
+					);
+				})}
 			</div>
 		);
 	}
