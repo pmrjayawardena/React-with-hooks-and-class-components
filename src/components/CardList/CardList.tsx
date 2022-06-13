@@ -1,14 +1,16 @@
 import React from 'react';
 import './cardList.css';
 import Card from '../Card/Card';
+import { Monster } from '../../App';
 
-const CardList = (props, forwardRef) => {
-	const { monsters } = props;
+type CardListProp = {
+	monsters: Monster[];
+};
+const CardList = ({ monsters }: CardListProp) => {
 	return (
 		<div className='card-list'>
 			{monsters.map((monster) => {
-				const { id, name } = monster;
-				return <Card key={id} name={name} />;
+				return <Card key={monster.id} monster={monster} />;
 			})}
 		</div>
 	);

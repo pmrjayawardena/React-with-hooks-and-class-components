@@ -1,17 +1,20 @@
 import './App.css';
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, ChangeEvent } from 'react';
+import CardList from './components/CardList/CardList';
+import SearchBox from './components/SearchBox/SearchBox';
+import { getData } from './utils/fetch.utils';
 
-import CardList from './components/CardList/CardList.jsx';
-import SearchBox from './components/SearchBox/SearchBox.jsx';
-
-const App = (props) => {
+export type Monster = {
+	id: string;
+	name: string;
+	email: string;
+};
+const App = () => {
 	console.log('render');
 	const [searchField, setSearchField] = useState('');
-	const [monsters, setMonsters] = useState([]);
+	const [monsters, setMonsters] = useState<Monster[]>([]);
 	const [filteredMonsters, setFilteredMonsters] = useState(monsters);
 	const [stringField, setStringField] = useState('');
-	console.log(stringField);
 
 	useEffect(() => {
 		getMonsterData();
@@ -26,17 +29,18 @@ const App = (props) => {
 		console.log('effect is firing');
 	}, [monsters, searchField]);
 
-	const monsterValue = (event) => {
+	const monsterValue = (event: ChangeEvent<HTMLInputElement>) => {
 		setSearchField(event.target.value.toLowerCase());
 	};
 	async function getMonsterData() {
 		//even though we get same data becase it is diffrent from the array we have in memory this will render over and over again
 		//so react think its diffrent value
-		const monsterData = await axios.get('https://jsonplaceholder.typicode.com/users');
-		setMonsters(monsterData.data);
+
+		const monsterData = await getData<Monster[]>('https://jsonplaceholder.typicode.com/users');
+		setMonsters(monsterData);
 	}
 
-	const onStringChange = (event) => {
+	const onStringChange = (event: ChangeEvent<HTMLInputElement>): void => {
 		setStringField(event.target.value);
 	};
 	return (

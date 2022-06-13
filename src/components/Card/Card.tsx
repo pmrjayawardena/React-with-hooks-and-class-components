@@ -1,8 +1,12 @@
 import React from 'react';
 import './Card.css';
+import { Monster } from '../../App';
 
-const Card = (props) => {
-	const { id, name } = props;
+type MonsterProp = {
+	monster: Monster;
+};
+const Card = ({ monster }: MonsterProp) => {
+	const { id, name } = monster;
 	return (
 		<>
 			<div className='card-container' key={id}>
